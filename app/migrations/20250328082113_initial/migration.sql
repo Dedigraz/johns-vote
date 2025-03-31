@@ -18,6 +18,31 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+CREATE TABLE "Submission" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "userId" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "isPublished" BOOLEAN NOT NULL DEFAULT false,
+    "submissionGroupId" TEXT,
+
+    CONSTRAINT "Submission_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SubmissionGroup" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "winningSubmissionId" TEXT,
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "isPublished" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "SubmissionGroup_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "GptResponse" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -49,6 +74,7 @@ CREATE TABLE "File" (
     "type" TEXT NOT NULL,
     "key" TEXT NOT NULL,
     "uploadUrl" TEXT NOT NULL,
+    "submissionId" TEXT,
 
     CONSTRAINT "File_pkey" PRIMARY KEY ("id")
 );
@@ -150,6 +176,12 @@ CREATE UNIQUE INDEX "Session_id_key" ON "Session"("id");
 CREATE INDEX "Session_userId_idx" ON "Session"("userId");
 
 -- AddForeignKey
+ALTER TABLE "Submission" ADD CONSTRAINT "Submission_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Submission" ADD CONSTRAINT "Submission_submissionGroupId_fkey" FOREIGN KEY ("submissionGroupId") REFERENCES "SubmissionGroup"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "GptResponse" ADD CONSTRAINT "GptResponse_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -157,6 +189,9 @@ ALTER TABLE "Task" ADD CONSTRAINT "Task_userId_fkey" FOREIGN KEY ("userId") REFE
 
 -- AddForeignKey
 ALTER TABLE "File" ADD CONSTRAINT "File_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "File" ADD CONSTRAINT "File_submissionId_fkey" FOREIGN KEY ("submissionId") REFERENCES "Submission"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PageViewSource" ADD CONSTRAINT "PageViewSource_dailyStatsId_fkey" FOREIGN KEY ("dailyStatsId") REFERENCES "DailyStats"("id") ON DELETE SET NULL ON UPDATE CASCADE;

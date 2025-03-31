@@ -68,7 +68,7 @@ app OpenSaaS {
     },
     onAfterSignup: import { onAfterSignup } from "@src/auth/hooks",
     onAuthFailedRedirectTo: "/login",
-    onAuthSucceededRedirectTo: "/demo-app",
+    onAuthSucceededRedirectTo: "/vote",
   },
 
   db: {
@@ -151,12 +151,108 @@ action updateIsUserAdminById {
 }
 //#endregion
 
+//#region Votes
+route VoteRoute { path: "/vote", to: SubmissionsPage }
+page SubmissionsPage {
+  authRequired: true,
+  component: import SubmissionPage from "@src/votes/VotesPage"
+}
+
+route CreateSumission {path: "/vote/create", to: CreateSubmissionPage }
+page CreateSubmissionPage {
+  authRequired: true,
+  component: import SubmissionPage from "@src/votes/SubmissionsPage"
+}
+route SubmissionsRoute {path:"/vote/:groupId", to: SubmissionsViewer}
+page SubmissionsViewer {
+  authRequired: false,
+  component: import SubmissionViewer from "@src/votes/SubmissionViewer"
+}
+
+route SubmissionDetailRoute { path: "/submission/:id", to: SubmissionDetailPage }
+page SubmissionDetailPage {
+  authRequired: true,
+  component: import SubmissionDetail from "@src/votes/SubmissionDetail"
+}
+
+action createSubmission {
+  fn: import { createSubmission } from "@src/votes/operations",
+  entities: [User, Submission]
+}
+action deleteSubmission {
+  fn: import { deleteSubmission } from "@src/votes/operations",
+  entities: [User, Submission]
+}
+action updateSubmission {
+  fn: import { updateSubmission } from "@src/votes/operations",
+  entities: [User, Submission]
+}
+query getAllSubmissionsByUser {
+  fn: import { getAllSubmissionsByUser } from "@src/votes/operations",
+  entities: [User, Submission]
+}
+query getAllSubmissions {
+  fn: import { getAllSubmissions } from "@src/votes/operations",
+  entities: [User, Submission]
+}
+query getSubmissionByWeek {
+  fn: import { getSubmissionByWeek } from "@src/votes/operations",
+  entities: [User, Submission]
+}
+query getSubmissionByMonth {
+  fn: import { getSubmissionByMonth } from "@src/votes/operations",
+  entities: [User, Submission]
+}
+query getSubmissionByYear {
+  fn: import { getSubmissionByYear } from "@src/votes/operations",
+  entities: [User, Submission]
+}
+query getSubmissionById {
+  fn: import { getSubmissionById } from "@src/votes/operations",
+  entities: [User, Submission]
+}
+query getSubmissionCountForGroup {
+  fn: import { getSubmissionCountForGroup } from "@src/votes/operations",
+  entities: [SubmissionGroup]
+}
+query voteForSubmission {
+  fn: import { voteForSubmission } from "@src/votes/operations",
+  entities: [User, Submission]
+}
+query createSubmissionGroup {
+  fn: import { createSubmissionGroup } from "@src/votes/operations",
+  entities: [User, SubmissionGroup]
+}
+query deleteSubmissionGroup {
+  fn: import { deleteSubmissionGroup } from "@src/votes/operations",
+  entities: [User, SubmissionGroup]
+}
+query updateSubmissionGroup {
+  fn: import { updateSubmissionGroup } from "@src/votes/operations",
+  entities: [User, SubmissionGroup]
+}
+query getAllSubmissionGroups {
+  fn: import { getAllSubmissionGroups } from "@src/votes/operations",
+  entities: [User, SubmissionGroup]
+}
+query getSubmissionGroupById {
+  fn: import { getSubmissionGroupById } from "@src/votes/operations",
+  entities: [User, SubmissionGroup]
+}
+query getSubmissionGroupByName {
+  fn: import { getSubmissionGroupByName } from "@src/votes/operations",
+  entities: [User, SubmissionGroup]
+}
+
+//#endregion
+
 //#region Demo AI App
 route DemoAppRoute { path: "/demo-app", to: DemoAppPage }
 page DemoAppPage {
   authRequired: true,
   component: import DemoAppPage from "@src/demo-ai-app/DemoAppPage"
 }
+
 
 action generateGptResponse {
   fn: import { generateGptResponse } from "@src/demo-ai-app/operations",

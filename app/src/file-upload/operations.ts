@@ -11,9 +11,10 @@ import { getUploadFileSignedURLFromS3, getDownloadFileSignedURLFromS3 } from './
 type FileDescription = {
   fileType: string;
   name: string;
+  size?: number;
 };
 
-export const createFile: CreateFile<FileDescription, File> = async ({ fileType, name }, context) => {
+export const createFile: CreateFile<FileDescription, File> = async ({ fileType, name, size }, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -28,6 +29,7 @@ export const createFile: CreateFile<FileDescription, File> = async ({ fileType, 
       key,
       uploadUrl,
       type: fileType,
+      size: size ?? 0,
       user: { connect: { id: context.user.id } },
     },
   });

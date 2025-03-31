@@ -1,4 +1,4 @@
-# <YOUR_APP_NAME>
+# John's Vote
 
 This project is based on [OpenSaas](https://opensaas.sh) template and consists of three main dirs:
 1. `app` - Your web app, built with [Wasp](https://wasp.sh).

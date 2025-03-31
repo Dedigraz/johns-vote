@@ -37,12 +37,7 @@
       "node_modules/@types"
     ],
     "outDir": ".wasp/out/user",
-    "baseUrl": "./src",
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+    "baseUrl": "./src"
   },
   "include": ["src"]
 }
